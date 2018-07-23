@@ -34,7 +34,7 @@ for(i = 0;i < channels.length;++i){
 
 
 for(i = 0;i < channels.length;++i){
-    var xmlhttp = new XMLHttpRequest(),
+    var xmlhttp = new XMLHttpRequest();
        var url = 'https://api.twitch.tv/kraken/channels/'+ channels[i] + '?client_id=7e0leu1c5jgpvj7iviwcij03omfiqt';
     	xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
