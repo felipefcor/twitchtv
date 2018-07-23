@@ -7,7 +7,7 @@ function getChannelInfo() {
 
 for(i = 0;i < channels.length;++i){
     var xmlhttp = new XMLHttpRequest();
-        url = 'https://api.twitch.tv/kraken/streams/'+ channels[i] + '?client_id=7e0leu1c5jgpvj7iviwcij03omfiqt';
+       var url = 'https://api.twitch.tv/kraken/streams/'+ channels[i] + '?client_id=7e0leu1c5jgpvj7iviwcij03omfiqt';
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
             var streamers = JSON.parse(this.responseText);
@@ -35,7 +35,7 @@ for(i = 0;i < channels.length;++i){
 
 for(i = 0;i < channels.length;++i){
     var xmlhttp = new XMLHttpRequest(),
-        url = 'https://api.twitch.tv/kraken/channels/'+ channels[i] + '?client_id=7e0leu1c5jgpvj7iviwcij03omfiqt';
+       var url = 'https://api.twitch.tv/kraken/channels/'+ channels[i] + '?client_id=7e0leu1c5jgpvj7iviwcij03omfiqt';
     	xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var channel1 = JSON.parse(this.responseText);
