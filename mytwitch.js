@@ -72,6 +72,53 @@ document.addEventListener("DOMContentLoaded", function(){
     getChannelInfo();
 });
 
+//Cuando pulso los botones del menú
 
+var selector = document.getElementsByClassName('selector');
+var numSelect = selector.length;
+var i;
+
+    for (i = 0 ; i < numSelect; i++) {
+   
+      selector[i].addEventListener('click', callback);
+  
+    }
+
+function callback () {
+
+      var allChannels = document.querySelectorAll('#canal'); 
+      var onChannel = document.querySelectorAll('.online');
+      var offChannel = document.querySelectorAll('.offline');
+      var status = this.getAttribute('id');
+             
+              if (status==="all"){
+                 
+                allChannels.forEach( function (selector) {
+                  selector.classList.remove("hidden");
+                })
+                
+
+              }
+              else if (status==="online") {
+                  onChannel.forEach( function (selector) {
+                    selector.classList.remove("hidden");
+                   })
+                  offChannel.forEach( function (selector) {
+                    selector.classList.add("hidden");
+                })
+                }
+              else if (status==="offline"){
+                  onChannel.forEach( function (selector) {
+                    selector.classList.add("hidden");
+                  })
+                  offChannel.forEach( function (selector) {
+                    selector.classList.remove("hidden"); 
+                })
+              }
+             
+
+selector[i].removeEventListener('click', callback);
+
+};
 
 
