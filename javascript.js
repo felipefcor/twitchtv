@@ -1,70 +1,134 @@
+var channels = ["freecodecamp", "NBA", "OgamingSC2", "cretetion", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas", "LVPes3"];
 
-
-var channels = ["freecodecamp", "ESL_SC2", "OgamingSC2", "cretetion", "storbeck", "habathcx", "RobotCaleb", "noobs2ninjas", "brunofin", "comster404"];
 
 function getChannelInfo() {
-  //Las urls
-  channels.forEach(function(channel) {
-    function makeURL(type, name) {
-      return 'https://wind-bow.hyperdev.space/twitch-api/' + type + '/' + name + '?callback=?';
-    };
 
-    
-    $.getJSON(makeURL("streams", channel), function(data) {
-      var game,
-          status;
-      if (data.stream === null) {
-        game = "Offline";
-        status = "offline";
-      } else if (data.stream === undefined) {
-        game = "Not found";
-        status = "offline";
-      } else {
-        game = data.stream.game;
-        status = "online";
-      };
+	channels.forEach(function(channel) {
 
-      $.getJSON(makeURL("channels", channel), function(data) {
-        var logo = data.logo != null ? data.logo : "https://dummyimage.com/50x50/ecf0e7/5c5457.jpg&text=0x3F",
-          name = data.display_name != null ? data.display_name : channel,
-          description = status === "online" ? ': ' + data.status : "";
+        function makeURL(type, name) {
+            return 'https://api.twitch.tv/kraken/' + type + '/' + name + '?client_id=7e0leu1c5jgpvj7iviwcij03omfiqt';
+        }
+                
+        var xmlhttpStreams = new XMLHttpRequest();
+        var url = makeURL("streams", channel);
+        xmlhttpStreams.onreadystatechange = function() {
+            if (xmlhttpStreams.readyState == 4 && this.status == 200) {
+                var data = JSON.parse(xmlhttpStreams.responseText);
+                var status, game;
 
-          html = '<div class="row ' + status + '" id="canal"><div class="col-xs-2 col-md-2" id="icon"><img src="' + 
-          logo + '" class="logo"></div><div class="col-xs-5 col-md-3" id="name"><a href="' + 
-          data.url + '" target="_blank">' + name + '</a></div><div class="col-xs-5 col-md-7" id="streaming">'+ 
-          game + '<span class="hidden-xs">' + description + '</span></div></div>';
+                if(data.stream === null) {
+                    status = 'offline';
+                    game = 'offline';
+                }
+                else if(data.stream === undefined) {
+                    status = 'offline';
+                    game = 'not found';
+                }
+                else {
+                    status = 'online';
+                    game = data.stream.game;
+                }
 
-        //Pongo a los que están online los primeros de la lista y a los offline los últimos
-        status === "online" ? $("#display").prepend(html) : $("#display").append(html);
-      });
-    });
+                var xmlhttpChannels = new XMLHttpRequest();
+                var url = makeURL("channels", channel);
+                xmlhttpChannels.onreadystatechange = function() {
+                    if (xmlhttpChannels.readyState == 4 && this.status == 200) {
+                        var data = JSON.parse(xmlhttpChannels.responseText);
+                        var logo = null;
+                        var name = null;
+                        var description = '';
+
+                        if(data.logo !== null){
+                            logo = data.logo;
+                            }
+                        if(data.name !== null) {
+                            name = data.name;
+                            }
+                        if(status === 'online') {
+                            description = data.status;
+                            }
+
+                        
+                          var div = document.createElement("div");
+
+                        
+                          div.innerHTML = '<div class="row ' + status + '" id="canal"><div class="col-xs-2 col-md-2" id="icon"><img src="' + 
+								          logo + '" class="logo"></div><div class="col-xs-5 col-md-3" id="name"><a href="' + 
+								          data.url + '" target="_blank">' + name + '</a></div><div class="col-xs-5 col-md-7" id="streaming">'+ 
+								          game + '<span class="hidden-xs">' + description + '</span></div></div>';
+
+                        
+                        var display = document.getElementById("display");
+
+                        
+                        if(status === 'online') {
+                           display.prepend(div);
+                        }
+
+                        else  {
+                          display.appendChild(div);
+                        }  
+                     }
+                };
+                xmlhttpChannels.open("GET", url, true);
+                xmlhttpChannels.send();
+
+            }
+        };
+        xmlhttpStreams.open("GET", url, true);
+        xmlhttpStreams.send();
+        
+
+    })
+}
+
+document.addEventListener("DOMContentLoaded", function(){
+      getChannelInfo();
 });
-};
 
-$(document).ready(function() {
-  getChannelInfo();
+
+
+var selector = document.getElementsByClassName('selector');
+var numSelect = selector.length;
+var i;
+
+    for (i = 0 ; i < numSelect; i++) {
+   
+      selector[i].addEventListener('click', callback);
   
-
-  //Cuando pulso los botones del menú
-  $(".selector").click(function() {
-
-    $(".selector").removeClass("active");
-    $(this).addClass("active");
-    var status = $(this).attr('id');
-
-    if (status === "all") {
-      $(".online, .offline").removeClass("hidden");
-    } else if (status === "online") {
-      $(".online").removeClass("hidden");
-      $(".offline").addClass("hidden");
-    } else {
-      $(".offline").removeClass("hidden");
-      $(".online").addClass("hidden");
     }
 
+function callback () {
 
-  });
+      var allChannels = document.querySelectorAll('#canal'); 
+      var onChannel = document.querySelectorAll('.online');
+      var offChannel = document.querySelectorAll('.offline');
+      var status = this.getAttribute('id');
+             
+              if (status==="all"){
+                 
+                allChannels.forEach( function (selector) {
+                  selector.classList.remove("hidden");
+                })
+                
 
-  });
+              }
+              else if (status==="online") {
+                  onChannel.forEach( function (selector) {
+                    selector.classList.remove("hidden");
+                   })
+                  offChannel.forEach( function (selector) {
+                    selector.classList.add("hidden");
+                })
+                }
+              else if (status==="offline"){
+                  onChannel.forEach( function (selector) {
+                    selector.classList.add("hidden");
+                  })
+                  offChannel.forEach( function (selector) {
+                    selector.classList.remove("hidden"); 
+                })
+              }
+           
 
-  
+};
