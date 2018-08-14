@@ -7,7 +7,7 @@ function getChannelInfo() {
 
 for(i = 0;i < channels.length;++i){
     var xmlhttp = new XMLHttpRequest();
-        url = 'https://api.twitch.tv/kraken/streams/'+ channels[i] + '?client_id=7e0leu1c5jgpvj7iviwcij03omfiqt';
+       var url = 'https://api.twitch.tv/kraken/streams/'+ channels[i] + '?client_id=7e0leu1c5jgpvj7iviwcij03omfiqt';
         xmlhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
             var streamers = JSON.parse(this.responseText);
@@ -34,8 +34,8 @@ for(i = 0;i < channels.length;++i){
 
 
 for(i = 0;i < channels.length;++i){
-    var xmlhttp = new XMLHttpRequest(),
-        url = 'https://api.twitch.tv/kraken/channels/'+ channels[i] + '?client_id=7e0leu1c5jgpvj7iviwcij03omfiqt';
+    var xmlhttp = new XMLHttpRequest();
+       var url = 'https://api.twitch.tv/kraken/channels/'+ channels[i] + '?client_id=7e0leu1c5jgpvj7iviwcij03omfiqt';
     	xmlhttp.onreadystatechange = function() {
         if (this.readyState == 4 && this.status == 200) {
             var channel1 = JSON.parse(this.responseText);
@@ -72,6 +72,53 @@ document.addEventListener("DOMContentLoaded", function(){
     getChannelInfo();
 });
 
+//Cuando pulso los botones del menú
 
+var selector = document.getElementsByClassName('selector');
+var numSelect = selector.length;
+var i;
+
+    for (i = 0 ; i < numSelect; i++) {
+   
+      selector[i].addEventListener('click', callback);
+  
+    }
+
+function callback () {
+
+      var allChannels = document.querySelectorAll('#canal'); 
+      var onChannel = document.querySelectorAll('.online');
+      var offChannel = document.querySelectorAll('.offline');
+      var status = this.getAttribute('id');
+             
+              if (status==="all"){
+                 
+                allChannels.forEach( function (selector) {
+                  selector.classList.remove("hidden");
+                })
+                
+
+              }
+              else if (status==="online") {
+                  onChannel.forEach( function (selector) {
+                    selector.classList.remove("hidden");
+                   })
+                  offChannel.forEach( function (selector) {
+                    selector.classList.add("hidden");
+                })
+                }
+              else if (status==="offline"){
+                  onChannel.forEach( function (selector) {
+                    selector.classList.add("hidden");
+                  })
+                  offChannel.forEach( function (selector) {
+                    selector.classList.remove("hidden"); 
+                })
+              }
+             
+
+selector[i].removeEventListener('click', callback);
+
+};
 
 
